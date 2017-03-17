@@ -1,3 +1,4 @@
+work-at-olist/db.sqlite3
 *.py[co]
 .DS_Store
 .idea
