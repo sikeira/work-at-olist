@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'workatolist',
+    'channels.apps.ChannelsConfig',
 ]
 
 MIDDLEWARE_CLASSES = [
