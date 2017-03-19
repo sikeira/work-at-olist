@@ -1,7 +1,5 @@
 {% for category, subs in sub_categories %}
-		<li>
-			{{ category.name }}
-		</li>
+		<li><a href="{% url 'single' %}?category_id={{category.id}}">{{ category.name }}</a></li>
         {% if subs|length %}
             <ul>
                 {% include "tree.html" with sub_categories=subs %}

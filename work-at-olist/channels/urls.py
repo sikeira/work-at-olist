@@ -4,7 +4,7 @@ from channels.views import ChannelsView
 
 
 urlpatterns = [
-    url(r'^channels/list', ChannelsView.list),
-    url(r'^channels/categories', ChannelsView.categories),
-    url(r'^channels/single', ChannelsView.single),
+    url(r'^channels/list/', ChannelsView.list),
+    url(r'^channels/categories/', ChannelsView.categories, name='categories'),
+    url(r'^channels/single/', ChannelsView.single, name='single'),
 ]

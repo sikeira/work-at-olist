@@ -1,16 +1,10 @@
-<form method="GET" action="">
-	<h1> Channel's Menu </h1>
-		<table>
-			<tr>
-				<td>Channel Name</td>
-			</tr>
-			{% for channel in channels %}
-			<tr>
-				<td>{{ channel.name }}</td>
-				<td>
-					<button type="submit" formaction="categories" name="channel_id" value="{{ channel.id }}">{{ channel.name }}</button>
-				</td>
-			</tr>
-			{% endfor %}
-		</table>
-</form>
+<h1> Channel's Menu </h1>
+	<table>
+		{% for channel in channels %}
+		<tr>
+			<td>
+				<a href="{% url 'categories' %}?channel_id={{channel.id}}">{{ channel.name }}</a>
+			</td>
+		</tr>
+		{% endfor %}
+	</table>
