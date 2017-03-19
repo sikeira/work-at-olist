@@ -16,12 +16,18 @@ def import_file(channel_name, file):
                 i = 0
                 category_objs = []
                 while i < len(categories):
-                    if categories[i] == 'Category':
-                        break
                     try:
-                        channel_category = ChannelCategory.objects.get(
+                        if i == 0:
+                            channel_category = ChannelCategory.objects.get(
                                                     name=categories[i],
-                                                    channel=channel)
+                                                    channel=channel,
+                                                    parent_category=None)
+                        else:
+                            channel_category = ChannelCategory.objects.get(
+                                                    name=categories[i],
+                                                    channel=channel,
+                                                    parent_category=category_objs[i-1])
+
                     except ChannelCategory.DoesNotExist:
                         channel_category = ChannelCategory()
                         channel_category.name = categories[i]
