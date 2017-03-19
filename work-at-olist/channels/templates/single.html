@@ -1,0 +1,7 @@
+<h1> {{ category.name }} Category </h1>
+{% for parent_category in parents %}
+<li>{{ parent_category.name }}</li>
+{% endfor %}
+<ul>
+	{% include "tree.html" %}
+</ul>
