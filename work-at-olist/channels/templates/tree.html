@@ -1,0 +1,10 @@
+{% for category, subs in sub_categories %}
+		<li>
+			{{ category.name }}
+		</li>
+        {% if subs|length %}
+            <ul>
+                {% include "tree.html" with sub_categories=subs %}
+            </ul>
+        {% endif %}
+{% endfor %}
