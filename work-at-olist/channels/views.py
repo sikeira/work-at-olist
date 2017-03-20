@@ -6,12 +6,18 @@ from channels.models import Channel, ChannelCategory
 # Create your views here.
 class ChannelsView:
     def list(request):
+        '''
+        List all channels.
+        '''
         template = 'home.html'
         channels = Channel.objects.all()
         return render(request, template, {'channels': channels})
 
 
     def categories(request):
+        '''
+        List categories from a specific channel.
+        '''
         template = 'categories.html'
         channel_id = request.GET.get('channel_id', None)
         try:
@@ -23,6 +29,9 @@ class ChannelsView:
                                           'categories': categories})
 
     def single(request):
+        '''
+        List parent and children from a single category.
+        '''
         template = "single.html"
         category_id = request.GET.get('category_id', None)
         print(category_id)

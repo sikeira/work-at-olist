@@ -3,6 +3,9 @@ from channels.models import Channel, ChannelCategory
 
 
 def import_file(channel_name, file):
+    '''
+    Import csv file to db.
+    '''
     with open(file) as f:
         reader = csv.reader(f)
         try:

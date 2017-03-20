@@ -4,7 +4,13 @@ from django.db import models
 
 
 class ChannelManager(models.Manager):
+    '''
+    Channel's model Manager.
+    '''
     def get_subcategories(self, channel, category):
+        '''
+        Get category subcategories, return an array of tuples.
+        '''
         categories = []
         sub_categories = ChannelCategory.objects.filter(channel=channel,
                                                        parent_category=category)
@@ -15,6 +21,9 @@ class ChannelManager(models.Manager):
         return categories
 
     def get_categories_tree(self, channel):
+        '''
+        Get categories tree as an array of tuples.
+        '''
         categories = []
         root_categories = ChannelCategory.objects.filter(channel=channel,
                                                          parent_category=None)
@@ -25,6 +34,9 @@ class ChannelManager(models.Manager):
 
 
 class Channel(models.Model):
+    '''
+    Channel model.
+    '''
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=200)
     objects = ChannelManager()
@@ -34,7 +46,14 @@ class Channel(models.Model):
 
 
 class ChannelCategoryManager(models.Manager):
+    '''
+    ChannelCategory model Manager.
+    '''
     def get_near_categories(self, category):
+        '''
+        Get category parents and subcategories, and return them as an array of
+        tuples.
+        '''
         parents = self.get_parents(category)
         children = self.get_subcategories(category)
         if len(parents) > 0:
@@ -48,6 +67,9 @@ class ChannelCategoryManager(models.Manager):
             return children
 
     def get_parents(self, category):
+        '''
+        Get category parents.
+        '''
         cat = []
         if category.parent_category == None:
             return [category]
@@ -57,6 +79,9 @@ class ChannelCategoryManager(models.Manager):
             return cat
 
     def get_subcategories(self, category):
+        '''
+        Get category subcategories.
+        '''
         categories = []
         sub_categories = ChannelCategory.objects.filter(parent_category=category)
         for sub_category in sub_categories:
@@ -65,6 +90,9 @@ class ChannelCategoryManager(models.Manager):
 
 
 class ChannelCategory(models.Model):
+    '''
+    ChannelCategory model.
+    '''
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=200)
     channel = models.ForeignKey(Channel)
