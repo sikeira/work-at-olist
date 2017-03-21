@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'workatolist',
     'channels.apps.ChannelsConfig',
+    'rest_framework',
 ]
 
 MIDDLEWARE_CLASSES = [
