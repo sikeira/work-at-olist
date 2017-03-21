@@ -1,10 +1,10 @@
 from django.conf.urls import url
 
-from channels.views import ChannelsView
+from channels import views
 
 
 urlpatterns = [
-    url(r'^channels/list/', ChannelsView.list),
-    url(r'^channels/categories/', ChannelsView.categories, name='categories'),
-    url(r'^channels/single/', ChannelsView.single, name='single'),
+    url(r'^channels/list/', views.ChannelList.as_view()),
+    url(r'^channels/categories/(?P<uuid>[^/]+)/$', views.CategoriesList.as_view()),
+    url(r'^channels/category/(?P<uuid>[^/]+)/$', views.Category.as_view()),
 ]

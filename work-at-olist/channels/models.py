@@ -15,8 +15,8 @@ class ChannelManager(models.Manager):
         sub_categories = ChannelCategory.objects.filter(channel=channel,
                                                        parent_category=category)
         for sub_category in sub_categories:
-            categories.append((sub_category, self.get_subcategories(channel,
-                                                                    sub_category)))
+            categories.append((sub_category.to_dict(),
+                               self.get_subcategories(channel, sub_category)))
 
         return categories
 
@@ -28,8 +28,8 @@ class ChannelManager(models.Manager):
         root_categories = ChannelCategory.objects.filter(channel=channel,
                                                          parent_category=None)
         for category in root_categories:
-            categories.append((category, self.get_subcategories(channel,
-                                                                category)))
+            categories.append((category.to_dict(),
+                               self.get_subcategories(channel, category)))
         return categories 
 
 
@@ -54,17 +54,11 @@ class ChannelCategoryManager(models.Manager):
         Get category parents and subcategories, and return them as an array of
         tuples.
         '''
-        parents = self.get_parents(category)
+        parents = []
+        if category.parent_category != None:
+            parents = self.get_parents(category.parent_category)
         children = self.get_subcategories(category)
-        if len(parents) > 0:
-            categories = [(parents[0], children)]
-            i = 1
-            while i < len(parents):
-                categories = [(parents[i], categories)]
-                i += 1
-            return categories
-        else:
-            return children
+        return parents, children
 
     def get_parents(self, category):
         '''
@@ -72,9 +66,9 @@ class ChannelCategoryManager(models.Manager):
         '''
         cat = []
         if category.parent_category == None:
-            return [category]
+            return [category.to_dict()]
         else:
-            cat.append(category)
+            cat.append(category.to_dict())
             cat += self.get_parents(category.parent_category)
             return cat
 
@@ -85,7 +79,7 @@ class ChannelCategoryManager(models.Manager):
         categories = []
         sub_categories = ChannelCategory.objects.filter(parent_category=category)
         for sub_category in sub_categories:
-            categories.append((sub_category, self.get_subcategories(sub_category)))
+            categories.append((sub_category.to_dict(), self.get_subcategories(sub_category)))
         return categories
 
 
@@ -101,3 +95,6 @@ class ChannelCategory(models.Model):
 
     def __str__(self):
         return self.name
+    
+    def to_dict(self):
+        return {"id": str(self.id), "name": self.name}

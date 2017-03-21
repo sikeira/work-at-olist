@@ -1,44 +1,49 @@
 from django.shortcuts import render
-from django.http import Http404
+from django.http import Http404, JsonResponse
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
 from channels.models import Channel, ChannelCategory
+from channels.serializers import ChannelSerializer, CategorySerializer
+
 
 # Create your views here.
-class ChannelsView:
-    def list(request):
+class ChannelList(APIView):
+    def get(self, request):
         '''
         List all channels.
         '''
-        template = 'home.html'
         channels = Channel.objects.all()
-        return render(request, template, {'channels': channels})
+        serializer = ChannelSerializer(channels, many=True)
+        return Response(serializer.data)
 
 
-    def categories(request):
+class CategoriesList(APIView):
+    def get(self, request, uuid=None):
         '''
         List categories from a specific channel.
         '''
-        template = 'categories.html'
-        channel_id = request.GET.get('channel_id', None)
         try:
-            channel = Channel.objects.get(id=channel_id)
+            channel = Channel.objects.get(id=uuid)
+            channel_serializer = ChannelSerializer(channel)
         except Channel.DoesNotExist:
             raise Http404
         categories = Channel.objects.get_categories_tree(channel)
-        return render(request, template, {'channel':channel, 
-                                          'categories': categories})
+        return JsonResponse({'channel':channel_serializer.data, 
+                             'categories': categories}, safe=False)
 
-    def single(request):
+
+class Category(APIView):
+    def get(self, request, uuid=None):
         '''
         List parent and children from a single category.
         '''
-        template = "single.html"
-        category_id = request.GET.get('category_id', None)
-        print(category_id)
         try:
-            category = ChannelCategory.objects.get(id=category_id)
+            category = ChannelCategory.objects.get(id=uuid)
+            category_serializer = CategorySerializer(category)
         except ChannelCategory.DoesNotExist:
             raise Http404
-        categories = ChannelCategory.objects.get_near_categories(category)
-        return render(request, template, {'category': category,
-                                          'sub_categories': categories})
+        parent, children = ChannelCategory.objects.get_near_categories(category)
+        return JsonResponse({'category': category_serializer.data,
+                             'parent_categories': parent,
+                             'sub_categories': children})
